@@ -6,9 +6,10 @@ const int MAX = 100;
 template<typename T,typename F>
 int myfind(T* begin,T* end,F f) {
     for (T* itr = begin; itr != end; itr++) {
-
-       ?
-
+        if(f(*itr))
+        {
+            return itr-begin;
+        }
     }
     return -1;
 
@@ -21,8 +22,8 @@ public:
 
     virtual ~AbstractUser() = default;
 
-    virtual void displayRole() const = 0;
-    virtual bool hasAccessToSee(AbstractUser*) const = 0;
+    virtual void displayRole() const = 0;//نمایش نقش ها
+    virtual bool hasAccessToSee(AbstractUser*) const = 0;//دسترسی به دیدن یوزر ها
 
     string getUsername() const {
         return username;
@@ -61,9 +62,11 @@ public:
         cout << "Staff: " << username << ", Salary: " << salary << endl;
     }
     bool hasAccessToSee(AbstractUser* user) const override {
-        if (? != nullptr) {
+        if (dynamic_cast<Student*>(user) != nullptr) {
             return true;
         }
+        else
+            return false;
     }
 
 private:
@@ -80,7 +83,13 @@ public:
         cout << "Admin ";
         Staff::displayRole();
     }
-    ?
+    bool hasAccessToSee(AbstractUser* user) const override {
+        if (dynamic_cast<Admin*>(user) != nullptr) {
+            return true;
+        }
+        else
+            return false;
+    }
 };
 
 AbstractUser* current_user;
@@ -92,14 +101,22 @@ void print() {
         return;
     }
     for (AbstractUser* user : users) {
-        if (?) {
+        if (user!=nullptr && current_user->hasAccessToSee(user)) {
             user->displayRole();
         }
     }
 }
 
 void addStudent(string username, string password, int grade) {
-    int index = ?;
+    auto func = [&](AbstractUser*user)
+    {
+        if (user->getUsername() == username && user->isPasswordCorrect(password)) {
+            return true;
+        }
+        return false;
+    };
+    int index = myfind(users, users + user_cnt, func);
+    
     if (index != -1) {
         return;
     }
@@ -115,22 +132,21 @@ int main() {
     Student s("erfan", "pass1", 12);
     Student s2("rasool", "pass2", 12);
     Staff st("alireza", "staffpass", 1000);
-    Staff st("kiyan", "staffpass", 1000);
+    Staff stt("kiyan", "staffpass", 1000);
     Admin a("yalda", "adminpass",1200);
     user_cnt = 5;
     users[0] = &s;
-    ?
-    ?
-    ?
-    ?
-
+    users[1] = &s2;
+    users[2] = &st;
+    users[3] = &stt;
+    users[4] = &a;
     while (1) {
         string username, password;
         cout << "username: ";
         cin >> username;
         cout << "password:";
         cin >> password;
-        int index = myfind(users, users + user_cnt, ?);
+        int index = myfind(users, users + user_cnt, [&](AbstractUser* user){return user->getUsername() == username && user->isPasswordCorrect(password);});
         if (index!=-1) {
             current_user = users[index];
             break;
