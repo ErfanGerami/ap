@@ -3,7 +3,6 @@
 using namespace std;
 const int MAX = 100;
 
-// با کمک بچه ها حل شدس
 template<typename T,typename F>
 int myfind(T* begin,T* end,F f) {
     for (T* itr = begin; itr != end; itr++) {
