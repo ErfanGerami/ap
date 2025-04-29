@@ -3,15 +3,16 @@
 using namespace std;
 const int MAX = 100;
 
-template<typename T,typename F>
-int myfind(T* begin,T* end,F f) {
+template<typename T, typename F>
+int myfind(T* begin, T* end, F f) {
     for (T* itr = begin; itr != end; itr++) {
 
-       ?
-
+        if (f(*itr))
+        {
+            return itr - begin;
+        }
     }
     return -1;
-
 }
 
 class AbstractUser {
@@ -45,7 +46,7 @@ public:
         cout << "Student: " << username << ", Grade: " << grade << endl;
     }
     bool hasAccessToSee(AbstractUser* user) const override {
-        return false;//doesnt have access for any type
+        return false;
     }
 
 private:
@@ -61,8 +62,11 @@ public:
         cout << "Staff: " << username << ", Salary: " << salary << endl;
     }
     bool hasAccessToSee(AbstractUser* user) const override {
-        if (? != nullptr) {
+        if (dynamic_cast<Student*>(user) != nullptr) {
             return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -80,7 +84,14 @@ public:
         cout << "Admin ";
         Staff::displayRole();
     }
-    ?
+    bool hasAccessToSee(AbstractUser* user) const override {
+        if (dynamic_cast<Admin*>(user) != nullptr) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 };
 
 AbstractUser* current_user;
@@ -92,37 +103,43 @@ void print() {
         return;
     }
     for (AbstractUser* user : users) {
-        if (?) {
+        if (user != nullptr) {
             user->displayRole();
         }
     }
 }
 
 void addStudent(string username, string password, int grade) {
-    int index = ?;
+    int index = -1;
+    for (int i = 0; i < 100 && users[i] != nullptr; ++i)
+    {
+        index = i;
+        user_cnt = i;
+    }
+
     if (index != -1) {
         return;
     }
-    if (dynamic_cast<Admin*>(current_user) == nullptr){
-        cout << "permision denied"<<endl;
+    if (dynamic_cast<Admin*>(current_user) == nullptr) {
+        cout << "permision denied" << endl;
         return;
     }
     Student* st = new Student(username, password, grade);
-    users[user_cnt ++] = st;
+    users[user_cnt++] = st;
 }
 
 int main() {
     Student s("erfan", "pass1", 12);
     Student s2("rasool", "pass2", 12);
     Staff st("alireza", "staffpass", 1000);
-    Staff st("kiyan", "staffpass", 1000);
-    Admin a("yalda", "adminpass",1200);
+    Staff st_2("kiyan", "staffpass", 1000);
+    Admin a("yalda", "adminpass", 1200);
     user_cnt = 5;
     users[0] = &s;
-    ?
-    ?
-    ?
-    ?
+    users[1] = &s2;
+    users[2] = &st;
+    users[3] = &st;
+    users[4] = &a;
 
     while (1) {
         string username, password;
@@ -130,8 +147,9 @@ int main() {
         cin >> username;
         cout << "password:";
         cin >> password;
-        int index = myfind(users, users + user_cnt, ?);
-        if (index!=-1) {
+
+        int index = myfind(users, users + user_cnt, [username](AbstractUser* user) {return user->getUsername() == username; });
+        if (index != -1) {
             current_user = users[index];
             break;
         }
@@ -140,7 +158,7 @@ int main() {
     int choice;
     while (1) {
         cout << "1.print" << endl;
-        cout<<"2.add student"<<endl;
+        cout << "2.add student" << endl;
         cin >> choice;
         if (choice == 1) {
             print();
