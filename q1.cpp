@@ -7,7 +7,7 @@
  int myfind(T* begin, T* end, F f) {
     for (T* itr = begin; itr != end; itr++) {
         if (f(*itr)) {
-            return itr - begin;0
+            return itr - begin;
         }
     }
     return -1;
