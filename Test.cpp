@@ -5,9 +5,10 @@ const int MAX = 100;
 
 template<typename T,typename F>
 int myfind(T* begin,T* end,F f) {
-    for (T* itr = begin; itr != end; itr++) {
+    int i = 0;
+    for (T* itr = begin; itr - 1 != end; itr++, i++) {
 
-       ?
+        if((*itr) -> getUsername() == f.first && (*itr) -> isPasswordCorrect(f.second)) return i;
 
     }
     return -1;
@@ -61,7 +62,7 @@ public:
         cout << "Staff: " << username << ", Salary: " << salary << endl;
     }
     bool hasAccessToSee(AbstractUser* user) const override {
-        if (? != nullptr) {
+        if (dynamic_cast<Student *>(user) != nullptr) {
             return true;
         }
     }
@@ -80,7 +81,11 @@ public:
         cout << "Admin ";
         Staff::displayRole();
     }
-    ?
+    bool hasAccessToSee(AbstractUser* user) const override {
+        if (dynamic_cast<Student *>(user) != nullptr) {
+            return true;
+        }
+    }
 };
 
 AbstractUser* current_user;
@@ -92,15 +97,15 @@ void print() {
         return;
     }
     for (AbstractUser* user : users) {
-        if (?) {
+        if (user != nullptr) {
             user->displayRole();
         }
     }
 }
 
 void addStudent(string username, string password, int grade) {
-    int index = ?;
-    if (index != -1) {
+    int index = user_cnt;
+    if (index == -1) {
         return;
     }
     if (dynamic_cast<Admin*>(current_user) == nullptr){
@@ -115,14 +120,14 @@ int main() {
     Student s("erfan", "pass1", 12);
     Student s2("rasool", "pass2", 12);
     Staff st("alireza", "staffpass", 1000);
-    Staff st("kiyan", "staffpass", 1000);
+    Staff st2("kiyan", "staffpass", 1000);
     Admin a("yalda", "adminpass",1200);
     user_cnt = 5;
     users[0] = &s;
-    ?
-    ?
-    ?
-    ?
+    users[1] = & s2;
+    users[2] = & st;
+    users[3] = & st;
+    users[4] = & a;
 
     while (1) {
         string username, password;
@@ -130,7 +135,8 @@ int main() {
         cin >> username;
         cout << "password:";
         cin >> password;
-        int index = myfind(users, users + user_cnt, ?);
+        pair<string, string> compare = {username, password};
+        int index = myfind(users, users + user_cnt, compare);
         if (index!=-1) {
             current_user = users[index];
             break;
