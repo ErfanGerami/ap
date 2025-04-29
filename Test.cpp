@@ -15,6 +15,11 @@ int myfind(T* begin,T* end,F f) {
 }
 
 class AbstractUser {
+
+protected:
+    string username;
+    string password;
+
 public:
     AbstractUser(const string& username, const string& password)
         : username(username), password(password) {}
@@ -31,9 +36,7 @@ public:
         return (pass == password);
     }
 
-protected:
-    string username;
-    string password;
+
 };
 
 class Student : public AbstractUser {
