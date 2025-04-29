@@ -22,8 +22,8 @@ public:
 
     virtual ~AbstractUser() = default;
 
-    virtual void displayRole() const = 0;//نمایش نقش ها
-    virtual bool hasAccessToSee(AbstractUser*) const = 0;//دسترسی به دیدن یوزر ها
+    virtual void displayRole() const = 0;
+    virtual bool hasAccessToSee(AbstractUser*) const = 0;
 
     string getUsername() const {
         return username;
